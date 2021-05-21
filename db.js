@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 require("dotenv").config();
+const db = {};
 
 //database username   password
 const sequelize = new Sequelize(
@@ -22,3 +23,8 @@ sequelize.authenticate().then(
     console.log(`Error: ${err}`);
   }
 );
+
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+module.exports = db;
