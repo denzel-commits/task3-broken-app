@@ -18,7 +18,6 @@ router.post("/signup", (req, res) => {
         expiresIn: 60 * 60 * 24,
       });
       res.status(200).json({
-        user: user,
         token: token,
       });
     },
@@ -41,7 +40,6 @@ router.post("/signin", (req, res) => {
               expiresIn: 60 * 60 * 24,
             });
             res.json({
-              user: user,
               message: "Successfully authenticated.",
               sessionToken: token,
             });
