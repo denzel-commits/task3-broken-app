@@ -1,4 +1,4 @@
-var router = require("express").Router();
+const router = require("express").Router();
 const { ReasonPhrases, StatusCodes } = require("http-status-codes");
 const { sequelize, Sequelize } = require("../db");
 const Game = require("../models/game")(sequelize, Sequelize.DataTypes);
@@ -97,9 +97,9 @@ router.delete("/remove/:id", (req, res) => {
     },
   }).then(
     function deleteSuccess(game) {
-      res.status(StatusCodes.NO_CONTENT).json({
+      res.status(StatusCodes.OK).json({
         game: game,
-        message: ReasonPhrases.NO_CONTENT,
+        message: ReasonPhrases.OK,
       });
     },
 

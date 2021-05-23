@@ -1,7 +1,7 @@
-var router = require("express").Router();
+const router = require("express").Router();
 const { ReasonPhrases, StatusCodes } = require("http-status-codes");
-var bcrypt = require("bcryptjs");
-var jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const { sequelize, Sequelize, sync } = require("../db");
 
@@ -55,7 +55,7 @@ router.post("/signin", (req, res) => {
         user.passwordHash,
         function (err, matches) {
           if (matches) {
-            var token = jwt.sign({ id: user.id }, "lets_play_sum_games_man", {
+            const token = jwt.sign({ id: user.id }, "lets_play_sum_games_man", {
               expiresIn: 60 * 60 * 24,
             });
             res.json({
