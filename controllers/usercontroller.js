@@ -1,4 +1,5 @@
 var router = require("express").Router();
+const { ReasonPhrases, StatusCodes } = require("http-status-codes");
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 
@@ -11,14 +12,18 @@ router.post("/signup", async (req, res) => {
     where: { email: req.body.user.email },
   });
   if (userWithEmail) {
-    return res.status(409).json({ message: "Email is already taken." });
+    return res
+      .status(StatusCodes.CONFLICT)
+      .json({ message: "Email is already taken." });
   }
 
   const userWithUsername = await User.findOne({
     where: { username: req.body.user.username },
   });
   if (userWithUsername) {
-    return res.status(409).json({ message: "Username is already taken." });
+    return res
+      .status(StatusCodes.CONFLICT)
+      .json({ message: "Username is already taken." });
   }
 
   User.create({
@@ -31,13 +36,13 @@ router.post("/signup", async (req, res) => {
       let token = jwt.sign({ id: user.id }, "lets_play_sum_games_man", {
         expiresIn: 60 * 60 * 24,
       });
-      res.status(200).json({
+      res.status(StatusCodes.CREATED).json({
         token: token,
       });
     },
 
     function signupFail(err) {
-      res.status(500).send(err.message);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
     }
   );
 });
@@ -58,12 +63,16 @@ router.post("/signin", (req, res) => {
               sessionToken: token,
             });
           } else {
-            res.status(502).send({ error: "Passwords do not match." });
+            res
+              .status(StatusCodes.NOT_FOUND)
+              .send({ error: "Passwords do not match." });
           }
         }
       );
     } else {
-      res.status(403).send({ error: "User not found." });
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .send({ error: ReasonPhrases.NOT_FOUND });
     }
   });
 });
