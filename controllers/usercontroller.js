@@ -6,7 +6,21 @@ const { sequelize, Sequelize, sync } = require("../db");
 
 const User = require("../models/user")(sequelize, Sequelize.DataTypes);
 
-router.post("/signup", (req, res) => {
+router.post("/signup", async (req, res) => {
+  const userWithEmail = await User.findOne({
+    where: { email: req.body.user.email },
+  });
+  if (userWithEmail) {
+    return res.status(409).json({ message: "Email is already taken." });
+  }
+
+  const userWithUsername = await User.findOne({
+    where: { username: req.body.user.username },
+  });
+  if (userWithUsername) {
+    return res.status(409).json({ message: "Username is already taken." });
+  }
+
   User.create({
     full_name: req.body.user.full_name,
     username: req.body.user.username,
