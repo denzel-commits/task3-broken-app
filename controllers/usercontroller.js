@@ -3,7 +3,7 @@ const { ReasonPhrases, StatusCodes } = require("http-status-codes");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const { sequelize, Sequelize, sync } = require("../db");
+const { sequelize, Sequelize } = require("../db");
 
 const User = require("../models/user")(sequelize, Sequelize.DataTypes);
 
@@ -33,11 +33,8 @@ router.post("/signup", async (req, res) => {
     email: req.body.user.email,
   }).then(
     function signupSuccess(user) {
-      let token = jwt.sign({ id: user.id }, "lets_play_sum_games_man", {
-        expiresIn: 60 * 60 * 24,
-      });
       res.status(StatusCodes.CREATED).json({
-        token: token,
+        user: user,
       });
     },
 
